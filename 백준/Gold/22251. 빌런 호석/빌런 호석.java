@@ -11,6 +11,7 @@ public class Main {
 	static int N, K, P, X, cnt;
 	static int[] current, change;
 	static int[][] led = new int[10][7];
+	static int[][] howMany = new int[10][10];
 
 	static {
 		led[0] = new int[] { 1, 1, 1, 0, 1, 1, 1 };
@@ -23,6 +24,18 @@ public class Main {
 		led[7] = new int[] { 1, 0, 1, 0, 0, 1, 0 };
 		led[8] = new int[] { 1, 1, 1, 1, 1, 1, 1 };
 		led[9] = new int[] { 1, 1, 1, 1, 0, 1, 1 };
+
+		for (int i = 0; i <= 9; i++) {
+			for (int j = 0; j <= 9; j++) {
+				int n = 0;
+
+				for (int k = 0; k < 7; k++) {
+					if (led[i][k] != led[j][k])
+						n++;
+				}
+				howMany[i][j] = n;
+			}
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -41,26 +54,26 @@ public class Main {
 			current[K - i] = curr.charAt(curr.length() - i) - '0';
 		}
 
-		reverse(0);
+		reverse(0, 0);
 
 		sb.append(cnt);
 		System.out.println(sb);
 	}
 
-	public static void reverse(int idx) {
-		if (idx == K) {
-			if (inRange(change)) {
-				int ledCnt = getLedCnt(change);
+	public static void reverse(int idx, int ledCnt) {
+		if (ledCnt > P)
+			return;
 
-				if (ledCnt >= 1 && ledCnt <= P)
-					cnt++;
+		if (idx == K) {
+			if (ledCnt >= 1 && inRange(change)) {
+				cnt++;
 			}
 			return;
 		}
 
 		for (int i = 0; i <= 9; i++) {
 			change[idx] = i;
-			reverse(idx + 1);
+			reverse(idx + 1, ledCnt + howMany[current[idx]][change[idx]]);
 		}
 	}
 
@@ -76,18 +89,5 @@ public class Main {
 		if (num == 0 || num > N)
 			return false;
 		return true;
-	}
-
-	public static int getLedCnt(int[] arr) {
-		int c = 0;
-
-		for (int i = 0; i < arr.length; i++) {
-
-			for (int j = 0; j < 7; j++) {
-				if (led[arr[i]][j] != led[current[i]][j])
-					c++;
-			}
-		}
-		return c;
 	}
 }

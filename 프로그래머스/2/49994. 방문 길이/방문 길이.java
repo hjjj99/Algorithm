@@ -38,10 +38,9 @@ class Solution {
             String path1 = x + "," + y + "->" + nx + "," + ny;  // (x, y)에서 (nx, ny)로 가는 경로
             String path2 = nx + "," + ny + "->" + x + "," + y;  // (nx, ny)에서 (x, y)로 가는 경로 (반대 방향)
             
-            if (!visitedPaths.contains(path1) && !visitedPaths.contains(path2)) {
-                visitedPaths.add(path1);
+            visitedPaths.add(path1);
                 visitedPaths.add(path2);
-            }
+            
             
             // 현재 좌표 업데이트
             x = nx;
